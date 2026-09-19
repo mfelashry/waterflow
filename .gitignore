@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.DS_Store
+*.pem
+npm-debug.log*
+.env*
+!.env.example
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+/public/maplibre-gl-worker.mjs
+/public/maplibre-gl-shared.mjs
