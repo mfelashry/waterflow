@@ -16,15 +16,33 @@ import {
 export type GlobeTarget = { lat: number; lon: number } | null;
 
 const IDLE_DISTANCE = 3.42;
+const APEX_DISTANCE = 5.4;
 const ARRIVAL_DISTANCE = 1.035;
-const FLIGHT_MS = 2600;
+const FLIGHT_MS = 3600;
+// Three beats: lift off over the origin, travel the shortest arc, then dive.
+const ASCENT_END = 0.28;
+const TRAVEL_END = 0.72;
 
 function easeInOutCubic(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 }
 
-function easeOutQuint(t: number) {
-  return 1 - (1 - t) ** 5;
+function easeOutCubic(t: number) {
+  return 1 - (1 - t) ** 3;
+}
+
+/** Orbit state the camera opens on: over `from` at the surface, else the idle globe. */
+function initialOrbit(from: GlobeTarget) {
+  if (from) {
+    const point = lonLatToVector3(from.lon, from.lat, 1);
+    const direction = new THREE.Vector3(point.x, point.y, point.z).normalize();
+    return {
+      azimuth: Math.atan2(direction.z, direction.x),
+      polar: Math.acos(THREE.MathUtils.clamp(direction.y, -1, 1)),
+      distance: ARRIVAL_DISTANCE,
+    };
+  }
+  return { azimuth: -1.35, polar: 1.15, distance: IDLE_DISTANCE };
 }
 
 function useEarthTextures() {
@@ -200,6 +218,7 @@ function Reticle({
 
 type SceneProps = {
   target: GlobeTarget;
+  from: GlobeTarget;
   flying: boolean;
   interactive: boolean;
   onArrive: () => void;
@@ -208,6 +227,7 @@ type SceneProps = {
 
 function Scene({
   target,
+  from,
   flying,
   interactive,
   onArrive,
@@ -219,11 +239,11 @@ function Scene({
   const atmosphereRef = useRef<THREE.ShaderMaterial>(null);
   const { textures } = useEarthTextures();
 
-  const orbit = useRef({
-    azimuth: -1.35,
-    polar: 1.15,
-    distance: IDLE_DISTANCE,
-  });
+  // When the descent starts from a place already on the surface (moving from one
+  // inspected site straight to another), seat the camera over that origin on the
+  // first frame so the flight visibly departs from where the user just was. The
+  // component remounts per descent, so the initial `from` is the right origin.
+  const orbit = useRef(initialOrbit(from));
   const progressStep = useRef(-1);
   // Set when the user leaves a site, so the camera eases back to orbit instead of
   // snapping out from the surface.
@@ -337,6 +357,9 @@ function Scene({
     if (targetLat === null && targetLon === null) pullBack.current = true;
   }, [targetLat, targetLon]);
 
+  const fromLat = from?.lat ?? null;
+  const fromLon = from?.lon ?? null;
+
   useEffect(() => {
     if (!flying || targetLat === null || targetLon === null) {
       flight.current = null;
@@ -344,19 +367,35 @@ function Scene({
     }
     pullBack.current = false;
     const point = lonLatToVector3(targetLon, targetLat, 1);
-    const from = camera.position.clone().normalize();
     const to = new THREE.Vector3(point.x, point.y, point.z).normalize();
-    const axis = new THREE.Vector3().crossVectors(from, to);
+
+    // Depart from the previous site when one is given, otherwise from wherever the
+    // camera currently sits (the idle orbit on the first search).
+    let fromVec: THREE.Vector3;
+    let fromDistance: number;
+    if (fromLat !== null && fromLon !== null) {
+      const origin = lonLatToVector3(fromLon, fromLat, 1);
+      fromVec = new THREE.Vector3(origin.x, origin.y, origin.z).normalize();
+      fromDistance = ARRIVAL_DISTANCE;
+      camera.position.copy(fromVec.clone().multiplyScalar(fromDistance));
+      camera.lookAt(0, 0, 0);
+      orbit.current.distance = fromDistance;
+    } else {
+      fromVec = camera.position.clone().normalize();
+      fromDistance = orbit.current.distance;
+    }
+
+    const axis = new THREE.Vector3().crossVectors(fromVec, to);
 
     flight.current = {
       start: performance.now(),
-      from,
+      from: fromVec,
       to,
       axis: axis.lengthSq() < 1e-8 ? new THREE.Vector3(0, 1, 0) : axis.normalize(),
-      angle: from.angleTo(to),
-      fromDistance: orbit.current.distance,
+      angle: fromVec.angleTo(to),
+      fromDistance,
     };
-  }, [flying, targetLat, targetLon, camera]);
+  }, [flying, targetLat, targetLon, fromLat, fromLon, camera]);
 
   useFrame((_, delta) => {
     const active = flight.current;
@@ -372,22 +411,42 @@ function Scene({
         onProgress(t);
       }
 
-      // Swing around the globe at a constant angular rate, then descend. Rotating about
-      // the great-circle axis keeps the horizon steady instead of letting a straight
-      // interpolation cut through the sphere.
-      const swing = easeInOutCubic(Math.min(1, t / 0.78));
-      const direction =
-        active.angle > 1e-4
-          ? active.from.clone().applyAxisAngle(active.axis, active.angle * swing)
-          : active.to.clone();
+      // Hold over the origin while lifting, travel the shortest great-circle at
+      // altitude, then hold over the target while diving in. No extra revolutions.
+      let direction: THREE.Vector3;
+      if (t < ASCENT_END || active.angle < 1e-4) {
+        direction = active.from.clone();
+      } else if (t < TRAVEL_END) {
+        const swing = easeInOutCubic((t - ASCENT_END) / (TRAVEL_END - ASCENT_END));
+        direction =
+          active.axis.lengthSq() > 1e-8
+            ? active.from.clone().applyAxisAngle(active.axis, active.angle * swing)
+            : active.to.clone();
+      } else {
+        direction = active.to.clone();
+      }
 
-      const lift = Math.sin(Math.PI * t) * 0.16;
-      const descent = easeOutQuint(Math.max(0, (t - 0.2) / 0.8));
-      const distance =
-        THREE.MathUtils.lerp(active.fromDistance, ARRIVAL_DISTANCE, descent) + lift;
+      let distance: number;
+      if (t < ASCENT_END) {
+        distance = THREE.MathUtils.lerp(
+          active.fromDistance,
+          APEX_DISTANCE,
+          easeOutCubic(t / ASCENT_END),
+        );
+      } else if (t < TRAVEL_END) {
+        distance = APEX_DISTANCE;
+      } else {
+        distance = THREE.MathUtils.lerp(
+          APEX_DISTANCE,
+          ARRIVAL_DISTANCE,
+          easeInOutCubic((t - TRAVEL_END) / (1 - TRAVEL_END)),
+        );
+      }
 
       camera.position.copy(direction.multiplyScalar(distance));
       camera.lookAt(0, 0, 0);
+      orbit.current.azimuth = Math.atan2(direction.z, direction.x);
+      orbit.current.polar = Math.acos(THREE.MathUtils.clamp(direction.y, -1, 1));
       orbit.current.distance = distance;
 
       if (t >= 1) {
@@ -395,6 +454,19 @@ function Scene({
         onArrive();
       }
       return;
+    }
+
+    if (pullBack.current) {
+      orbit.current.distance = THREE.MathUtils.damp(
+        orbit.current.distance,
+        IDLE_DISTANCE,
+        3.2,
+        delta,
+      );
+      if (Math.abs(orbit.current.distance - IDLE_DISTANCE) < 0.02) {
+        orbit.current.distance = IDLE_DISTANCE;
+        pullBack.current = false;
+      }
     }
 
     if (interactive && !drag.current.active)
@@ -449,6 +521,7 @@ function Scene({
 
 export type GlobeProps = {
   target: GlobeTarget;
+  from?: GlobeTarget;
   flying: boolean;
   interactive?: boolean;
   onArrive: () => void;
@@ -457,6 +530,7 @@ export type GlobeProps = {
 
 export default function Globe({
   target,
+  from = null,
   flying,
   interactive = true,
   onArrive,
@@ -481,6 +555,7 @@ export default function Globe({
     >
       <Scene
         target={target}
+        from={from}
         flying={flying}
         interactive={interactive && !flying}
         onArrive={onArrive}

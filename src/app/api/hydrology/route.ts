@@ -10,13 +10,15 @@ export async function GET(request: Request) {
   const lat = Number.parseFloat(params.get("lat") ?? "");
   const lon = Number.parseFloat(params.get("lon") ?? "");
   const radiusKm = clamp(Number.parseFloat(params.get("radiusKm") ?? "3") || 3, 0.5, 8);
+  const date = params.get("date") ?? "";
+  const asOf = /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined;
 
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     return NextResponse.json({ error: "lat and lon are required" }, { status: 400 });
   }
 
   try {
-    const data = await collectHydrology(lat, lon, radiusKm);
+    const data = await collectHydrology(lat, lon, radiusKm, asOf);
     return NextResponse.json(data, {
       headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
     });

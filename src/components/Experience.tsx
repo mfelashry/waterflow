@@ -8,6 +8,7 @@ import type { Map as MapLibreMap } from "maplibre-gl";
 import SearchBar from "@/components/SearchBar";
 import AnalysisPanel from "@/components/panel/AnalysisPanel";
 import { Button } from "@/components/ui/button";
+import { flowlinesForReading } from "@/lib/flowEpoch";
 import { clamp } from "@/lib/geo";
 import { prefetchTiles } from "@/lib/prefetch";
 import type { LayerToggles } from "@/components/map/SiteMap";
@@ -33,27 +34,39 @@ const DEFAULT_TOGGLES: LayerToggles = {
   roads: false,
 };
 
-/** How long the globe is given to climb back to orbit before the next descent. */
-const PULL_BACK_MS = 1150;
 /** The reveal never waits on tiles longer than this. */
 const REVEAL_CAP_MS = 2400;
+/** Fade only during the final dive, after the camera has travelled to the target. */
+const FADE_START = 0.72;
+const FADE_END = 0.96;
+
+function smoothstep(edge0: number, edge1: number, value: number) {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
 
 /** Map a discharge ratio onto how wide and how fast the channels are drawn. */
 function flowFromReading(reading: FlowReading | null) {
-  if (!reading) return { scale: 1, speed: 0.62 };
-  const ratio = clamp(reading.ratioToMedian, 0.15, 6);
+  if (!reading) return { scale: 1, speed: 0.62, waterOpacity: 0.42 };
+  const ratio = clamp(reading.ratioToMedian, 0.12, 6);
   return {
-    scale: Number(clamp(0.6 + 0.72 * Math.sqrt(ratio), 0.6, 2.3).toFixed(3)),
-    speed: Number(clamp(0.34 + 0.46 * ratio, 0.24, 1.6).toFixed(3)),
+    scale: Number(clamp(0.32 + 0.95 * Math.sqrt(ratio), 0.32, 2.8).toFixed(3)),
+    speed: Number(clamp(0.22 + 0.55 * ratio, 0.18, 1.8).toFixed(3)),
+    waterOpacity: Number(clamp(0.16 + 0.34 * Math.sqrt(ratio), 0.16, 0.58).toFixed(3)),
   };
 }
 
 export default function Experience() {
   const [phase, setPhase] = useState<Phase>("orbit");
   const [place, setPlace] = useState<Place | null>(null);
+  // The site the current descent departs from, so site-to-site moves fly straight
+  // across rather than resetting to the orbit view. Null means starting from orbit.
+  const [fromPlace, setFromPlace] = useState<Place | null>(null);
   const [mapRevealed, setMapRevealed] = useState(false);
+  const [descentFade, setDescentFade] = useState(0);
 
   const [hydrology, setHydrology] = useState<HydrologyResponse | null>(null);
+  const [baseHydrology, setBaseHydrology] = useState<HydrologyResponse | null>(null);
   const [hydrologyError, setHydrologyError] = useState<string | null>(null);
   const [timeline, setTimeline] = useState<ImageryTimeline | null>(null);
   const [streamflow, setStreamflow] = useState<StreamflowResult | null>(null);
@@ -82,16 +95,18 @@ export default function Experience() {
     [place],
   );
 
-  const beginDescent = useCallback((next: Place) => {
-    setPlace(next);
-    setPhase("descending");
-  }, []);
+  const globeFrom = useMemo(
+    () => (fromPlace ? { lat: fromPlace.lat, lon: fromPlace.lon } : null),
+    [fromPlace],
+  );
 
   const selectPlace = useCallback(
     (next: Place) => {
       requestRef.current += 1;
       setMapRevealed(false);
+      setDescentFade(0);
       setHydrology(null);
+      setBaseHydrology(null);
       setHydrologyError(null);
       setTimeline(null);
       setStreamflow(null);
@@ -99,18 +114,15 @@ export default function Experience() {
       setEpochBlend(1);
       setEpochLoading(false);
 
-      // Coming from a site, climb back to orbit first so the move reads as leaving one
-      // place and travelling to another rather than teleporting.
-      if (phase === "site") {
-        mapRef.current = null;
-        setPlace(null);
-        setPhase("returning");
-        later(() => beginDescent(next), PULL_BACK_MS);
-        return;
-      }
-      beginDescent(next);
+      // Depart straight from the current site when there is one, so the camera
+      // travels from where the user just was to the new place; otherwise start
+      // from the idle orbit of the hero globe.
+      setFromPlace(phase === "site" ? place : null);
+      if (phase === "site") mapRef.current = null;
+      setPlace(next);
+      setPhase("descending");
     },
-    [phase, later, beginDescent],
+    [phase, place],
   );
 
   // Site data is fetched while the camera is still descending, so the map has layers
@@ -127,6 +139,7 @@ export default function Experience() {
       })
       .then((data) => {
         if (id !== requestRef.current) return;
+        setBaseHydrology(data);
         setHydrology(data);
         if (data.stats.channelCount === 0) {
           setHydrologyError("No mapped channels within 3 km of this point.");
@@ -170,6 +183,11 @@ export default function Experience() {
 
   const flow = useMemo(() => flowFromReading(reading), [reading]);
 
+  const mappedHydrology = useMemo(
+    () => (hydrology ? flowlinesForReading(hydrology, reading) : null),
+    [hydrology, reading],
+  );
+
   const prefetchEpoch = useCallback((item: ImageryEpoch) => {
     const map = mapRef.current;
     if (!map) return;
@@ -182,44 +200,49 @@ export default function Experience() {
     mapRef.current = null;
     setPhase("orbit");
     setPlace(null);
+    setFromPlace(null);
     setMapRevealed(false);
+    setDescentFade(0);
     setHydrology(null);
+    setBaseHydrology(null);
     setTimeline(null);
     setStreamflow(null);
     setEpoch(null);
   };
 
   const showMap = phase === "site" && place !== null;
-  const showGlobe = phase !== "site";
-  const covered = phase === "descending" || (showMap && !mapRevealed);
+  const descending = phase === "descending";
+  const covered = showMap && !mapRevealed;
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-[#04060c]">
-      {/* The globe is torn down once the map takes over; nothing renders behind it. */}
-      {showGlobe && (
-        <div className="absolute inset-0">
-          <Globe
-            target={globeTarget}
-            flying={phase === "descending"}
-            interactive={phase === "orbit"}
-            onArrive={() => {
-              setPhase("site");
-              later(() => setMapRevealed(true), REVEAL_CAP_MS);
-            }}
-          />
-        </div>
-      )}
+      {/* Keep the globe mounted so a search from a site lifts off from that place
+          instead of remounting over the idle orbit. The map covers it on arrival. */}
+      <div className={`absolute inset-0 ${phase === "orbit" || descending ? "" : "pointer-events-none"}`}>
+        <Globe
+          target={globeTarget}
+          from={globeFrom}
+          flying={phase === "descending"}
+          interactive={phase === "orbit"}
+          onProgress={(t) => setDescentFade(smoothstep(FADE_START, FADE_END, t))}
+          onArrive={() => {
+            setPhase("site");
+            later(() => setMapRevealed(true), REVEAL_CAP_MS);
+          }}
+        />
+      </div>
 
       {showMap && (
         <div className="absolute inset-0">
           <SiteMap
             center={{ lat: place.lat, lon: place.lon }}
-            hydrology={hydrology}
+            hydrology={mappedHydrology}
             epoch={epoch}
             epochBlend={epochBlend}
             toggles={toggles}
             flowSpeed={flow.speed * speedBias}
             flowScale={flow.scale}
+            waterOpacity={flow.waterOpacity}
             onReady={(map) => {
               mapRef.current = map;
             }}
@@ -234,12 +257,12 @@ export default function Experience() {
       <motion.div
         className="pointer-events-none absolute inset-0 z-40 bg-[#04060c]"
         initial={false}
-        animate={{ opacity: covered ? 1 : 0 }}
-        transition={{
-          duration: phase === "descending" ? 0.42 : 0.5,
-          delay: phase === "descending" ? 1.95 : 0,
-          ease: "easeInOut",
-        }}
+        animate={{ opacity: descending ? descentFade : covered ? 1 : 0 }}
+        transition={
+          descending
+            ? { duration: 0.12, ease: "linear" }
+            : { duration: 0.5, ease: "easeInOut" }
+        }
       />
 
       <AnimatePresence>
@@ -311,7 +334,7 @@ export default function Experience() {
         <AnalysisPanel
           key={place.id}
           place={place}
-          hydrology={hydrology}
+          hydrology={baseHydrology}
           hydrologyError={hydrologyError}
           timeline={timeline}
           streamflow={streamflow}

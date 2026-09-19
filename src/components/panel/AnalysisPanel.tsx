@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MeasurementsDashboard from "@/components/panel/MeasurementsDashboard";
 import { cn } from "@/lib/utils";
 import type {
   AnalysisResult,
@@ -99,6 +100,9 @@ export default function AnalysisPanel({
   onSpeedBiasChange,
 }: AnalysisPanelProps) {
   const [tab, setTab] = useState<TabKey>("analysis");
+  // The Marimo dashboard boots a WASM runtime, so only mount it once the user
+  // opens Measurements, then keep it mounted to avoid rebooting on tab switches.
+  const [measurementsOpened, setMeasurementsOpened] = useState(false);
   const [open, setOpen] = useState(true);
   const [detail, setDetail] = useState(false);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
@@ -213,6 +217,7 @@ export default function AnalysisPanel({
                   setOpen(false);
                   return;
                 }
+                if (key === "measurements") setMeasurementsOpened(true);
                 setTab(key);
                 setOpen(true);
               }}
@@ -460,57 +465,9 @@ export default function AnalysisPanel({
                     </div>
                   )}
 
-                  {tab === "measurements" &&
-                    (stats ? (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-2">
-                          <Figure
-                            value={`${stats.channelCount}`}
-                            label="channel segments"
-                            note={`${stats.channelKm.toFixed(1)} km total`}
-                          />
-                          <Figure
-                            value={
-                              stats.elevationRange
-                                ? `${(stats.elevationRange[1] - stats.elevationRange[0]).toFixed(0)} m`
-                                : "—"
-                            }
-                            label="relief"
-                            note={
-                              stats.elevationRange
-                                ? `${stats.elevationRange[0]}–${stats.elevationRange[1]} m`
-                                : "outside USGS coverage"
-                            }
-                          />
-                          <Figure
-                            value={`${stats.buildingCount}`}
-                            label="roofs"
-                            note={`${stats.impervousKm.toFixed(0)} km of road`}
-                          />
-                          <Figure
-                            value={`${stats.waterbodyCount + stats.wetlandCount}`}
-                            label="storage features"
-                            note={`${stats.waterbodyCount} water · ${stats.wetlandCount} wetland`}
-                          />
-                        </div>
-
-                        {stats.namedChannels.length > 0 && (
-                          <div>
-                            <Label>Named channels</Label>
-                            <p className="text-[13px] leading-relaxed text-[#b7c7dc]">
-                              {stats.namedChannels.join(" · ")}
-                            </p>
-                          </div>
-                        )}
-
-                        <p className="text-[11px] leading-relaxed text-[#64788f]">
-                          Channels from {stats.sources.join(" and ") || "OpenStreetMap"}. Roofs and
-                          roads from OpenStreetMap. Elevation from the USGS elevation service.
-                        </p>
-                      </div>
-                    ) : (
-                      <Skeleton />
-                    ))}
+                  {/* Measurements are rendered by the persistent Marimo dashboard
+                      below, kept mounted so its WASM runtime is not rebooted when
+                      switching tabs. */}
 
                   {tab === "imagery" &&
                     (timeline ? (
@@ -658,6 +615,12 @@ export default function AnalysisPanel({
                   )}
                 </motion.div>
               </AnimatePresence>
+
+              {measurementsOpened && (
+                <div className={tab === "measurements" ? "block" : "hidden"}>
+                  <MeasurementsDashboard place={place} stats={stats} streamflow={streamflow} />
+                </div>
+              )}
             </div>
           </motion.section>
         )}
@@ -693,16 +656,6 @@ function Skeleton() {
           className="loading-sheen relative h-9 overflow-hidden rounded bg-white/[0.05]"
         />
       ))}
-    </div>
-  );
-}
-
-function Figure({ value, label, note }: { value: string; label: string; note?: string }) {
-  return (
-    <div className="rounded border border-white/10 bg-white/[0.04] px-3 py-2.5">
-      <div className="tabular text-[18px] leading-none font-semibold text-white">{value}</div>
-      <div className="mt-1 text-[11px] text-[#93a7c0]">{label}</div>
-      {note && <div className="mt-0.5 truncate text-[10px] text-[#64788f]">{note}</div>}
     </div>
   );
 }

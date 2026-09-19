@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <!-- Preload is necessary because we show these images when we disconnect from the server,
+    but at that point we cannot load these images from the server -->
+    <link rel="preload" href="./assets/gradient-yHQUC_QB.png" as="image" />
+    <link rel="preload" href="./assets/noise-60BoTA8O.png" as="image" />
+    <!-- Preload the fonts -->
+    <link rel="preload" href="./assets/Lora-VariableFont_wght-CZceb_kH.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Regular-Bam3NpBI.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Bold-C_DwAp7Z.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Regular-CEsLFVD9.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Medium-D5MAsWEG.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Bold-C6PDArdf.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="a marimo app" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <script data-marimo="true">
+      function __resizeIframe(obj) {
+        const scrollbarHeight = 20; // Max between windows, mac, and linux
+
+        function setHeight() {
+          // Guard against race condition where iframe isn't ready
+          if (!obj.contentWindow?.document?.documentElement) {
+            return;
+          }
+          const element = obj.contentWindow.document.documentElement;
+          // If there is no vertical scrollbar, we don't need to resize the iframe
+          if (element.scrollHeight === element.clientHeight) {
+            return;
+          }
+
+          // Create a new height that includes the scrollbar height if it's visible
+          const hasHorizontalScrollbar = element.scrollWidth > element.clientWidth;
+          const newHeight = element.scrollHeight + (hasHorizontalScrollbar ? scrollbarHeight : 0);
+
+          // Only update the height if it's different from the current height
+          if (obj.style.height !== `${newHeight}px`) {
+            obj.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Resize the iframe to the height of the content and bottom scrollbar height
+        setHeight();
+
+        // Resize the iframe when the content changes
+        const resizeObserver = new ResizeObserver((_entries) => {
+          setHeight();
+        });
+        // Only observe if iframe content is ready
+        if (obj.contentWindow?.document?.body) {
+          resizeObserver.observe(obj.contentWindow.document.body);
+        }
+      }
+    </script>
+    <marimo-filename hidden>notebook.py</marimo-filename>
+    <!-- TODO(Trevor): Legacy, required by VS Code plugin. Remove when plugin is updated (see marimo/server/_templates/template.py) -->
+    <marimo-version data-version="{{ version }}" hidden></marimo-version>
+    <marimo-user-config data-config="{{ user_config }}" hidden></marimo-user-config>
+    <marimo-server-token data-token="{{ server_token }}" hidden></marimo-server-token>
+    <!-- /TODO -->
+    <title>dashboard</title>
+    <script type="module" crossorigin src="./assets/index-4n22QjCD.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-B0Z9INg1.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-CBDbhulC.js">
+    <link rel="modulepreload" crossorigin href="./assets/compiler-runtime-CYIjoINj.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEvent-xfs0Sn4r.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-dom-BQrReHnR.js">
+    <link rel="modulepreload" crossorigin href="./assets/schemas-aTUejmFi.js">
+    <link rel="modulepreload" crossorigin href="./assets/isObject-BCaOs5rp.js">
+    <link rel="modulepreload" crossorigin href="./assets/isSymbol-oX0TOjjx.js">
+    <link rel="modulepreload" crossorigin href="./assets/now-Cmx0b_zA.js">
+    <link rel="modulepreload" crossorigin href="./assets/debounce-aFmHgJZY.js">
+    <link rel="modulepreload" crossorigin href="./assets/isArrayLikeObject-DnwgSs_Z.js">
+    <link rel="modulepreload" crossorigin href="./assets/_initCloneObject-CM3WilQg.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseMerge-DLqSVasz.js">
+    <link rel="modulepreload" crossorigin href="./assets/objects-snlMn4yk.js">
+    <link rel="modulepreload" crossorigin href="./assets/jsx-runtime-B74pBk57.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEventListener-92uWqz-P.js">
+    <link rel="modulepreload" crossorigin href="./assets/invariant-Ci2dTZ72.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-D5Ywm7-q.js">
+    <link rel="modulepreload" crossorigin href="./assets/constants-BDbGiS7O.js">
+    <link rel="modulepreload" crossorigin href="./assets/Deferred-CrTnjj37.js">
+    <link rel="modulepreload" crossorigin href="./assets/session-Sz5nSFku.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-BlNM0caL.js">
+    <link rel="modulepreload" crossorigin href="./assets/clsx-DB0hHKMi.js">
+    <link rel="modulepreload" crossorigin href="./assets/cn-ldLVeaqm.js">
+    <link rel="modulepreload" crossorigin href="./assets/fullscreen-BH2jz-F4.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DzCQtGkt.js">
+    <link rel="modulepreload" crossorigin href="./assets/menu-items-BSRA2YI9.js">
+    <link rel="modulepreload" crossorigin href="./assets/button-Dh8EwhsF.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-dialog-CA-2mBs3.js">
+    <link rel="modulepreload" crossorigin href="./assets/createLucideIcon-B7HeEoG2.js">
+    <link rel="modulepreload" crossorigin href="./assets/check-BoA6XBpj.js">
+    <link rel="modulepreload" crossorigin href="./assets/context-Do8M9TDF.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNumberFormatter-DHJ9s6Vk.js">
+    <link rel="modulepreload" crossorigin href="./assets/select-nLt2y0Sw.js">
+    <link rel="modulepreload" crossorigin href="./assets/circle-ByJdIf5p.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-BUtPzKB4.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BtC9ym6k.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CZNULd6Z.js">
+    <link rel="modulepreload" crossorigin href="./assets/arrays-BqUx5USx.js">
+    <link rel="modulepreload" crossorigin href="./assets/once-Haz_uxEL.js">
+    <link rel="modulepreload" crossorigin href="./assets/capabilities-D8kPgMKr.js">
+    <link rel="modulepreload" crossorigin href="./assets/cjs-C49f7GXV.js">
+    <link rel="modulepreload" crossorigin href="./assets/createReducer-B_XmHROl.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DiYjQAhI.js">
+    <link rel="modulepreload" crossorigin href="./assets/marked.esm-B_3iMIUq.js">
+    <link rel="modulepreload" crossorigin href="./assets/strings-CReV1AYG.js">
+    <link rel="modulepreload" crossorigin href="./assets/requests-C6_IaFh7.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-B8pdsUrS.js">
+    <link rel="modulepreload" crossorigin href="./assets/useLifecycle-BUaJcygz.js">
+    <link rel="modulepreload" crossorigin href="./assets/toDate-hGYJX0Ha.js">
+    <link rel="modulepreload" crossorigin href="./assets/database-zap-CloO6gbw.js">
+    <link rel="modulepreload" crossorigin href="./assets/numbers-Bc-r3jsC.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDebounce-DgpSQhrP.js">
+    <link rel="modulepreload" crossorigin href="./assets/input-DEbY281O.js">
+    <link rel="modulepreload" crossorigin href="./assets/uuid-k9DpjH68.js">
+    <link rel="modulepreload" crossorigin href="./assets/use-toast-DpWHUGuF.js">
+    <link rel="modulepreload" crossorigin href="./assets/write-secret-modal-D6zoZgLY.js">
+    <link rel="modulepreload" crossorigin href="./assets/plus-C4J9gIE1.js">
+    <link rel="modulepreload" crossorigin href="./assets/trash-2-D_HX-0qx.js">
+    <link rel="modulepreload" crossorigin href="./assets/badge-BSgtkC2e.js">
+    <link rel="modulepreload" crossorigin href="./assets/preload-helper-HclGiUj8.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DkPPv0FB.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-Dw9YRsCU.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-B0RXffUm.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-Cx4BE7jC.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CKUpxYGQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/stex-Dc5bKD4z.js">
+    <link rel="modulepreload" crossorigin href="./assets/paths-zcL04qUW.js">
+    <link rel="modulepreload" crossorigin href="./assets/useTheme-C-ri8BtY.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAsyncData-Buhk-UgR.js">
+    <link rel="modulepreload" crossorigin href="./assets/purify.es-DrVcFY1Q.js">
+    <link rel="modulepreload" crossorigin href="./assets/cells-Cp-G34Rz.js">
+    <link rel="modulepreload" crossorigin href="./assets/get-DjNf4SIX.js">
+    <link rel="modulepreload" crossorigin href="./assets/_hasPath-BmRQipI0.js">
+    <link rel="modulepreload" crossorigin href="./assets/hasIn-yw4sIeJR.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseSet-gX6o3Pih.js">
+    <link rel="modulepreload" crossorigin href="./assets/pick-Bs4cJfJU.js">
+    <link rel="modulepreload" crossorigin href="./assets/errors-DzO-nXy-.js">
+    <link rel="modulepreload" crossorigin href="./assets/switch-DjXr9Y9D.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-BMXKNElG.js">
+    <link rel="modulepreload" crossorigin href="./assets/eye-off-CFuPxa9F.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-DlEomWzI.js">
+    <link rel="modulepreload" crossorigin href="./assets/extends-CvVTau-c.js">
+    <link rel="modulepreload" crossorigin href="./assets/esm-BHMOvJzM.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAddCell-DdB_uBif.js">
+    <link rel="modulepreload" crossorigin href="./assets/readonly-python-code-DpIyjHqY.js">
+    <link rel="modulepreload" crossorigin href="./assets/LazyAnyLanguageCodeMirror-LboTfNDv.js">
+    <link rel="modulepreload" crossorigin href="./assets/micromark-factory-space-D9Dr-k4J.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-5FQGJX7Z-CRg4xQWg.js">
+    <link rel="modulepreload" crossorigin href="./assets/markdown-renderer-BZKlbm2Q.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-icon-z8fuTE3w.js">
+    <link rel="modulepreload" crossorigin href="./assets/useRunCells-CX7oW5zy.js">
+    <link rel="modulepreload" crossorigin href="./assets/RenderHTML-DwhMAd9l.js">
+    <link rel="modulepreload" crossorigin href="./assets/blob-B2d_dHwI.js">
+    <link rel="modulepreload" crossorigin href="./assets/share-CPtBiNgr.js">
+    <link rel="modulepreload" crossorigin href="./assets/events-CbeVJ6OD.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-Di9TbuV9.js">
+    <link rel="modulepreload" crossorigin href="./assets/ErrorBoundary-CDVGFYfr.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-B-r81uZ6.js">
+    <link rel="modulepreload" crossorigin href="./assets/tabs-Cy1qXLzH.js">
+    <link rel="modulepreload" crossorigin href="./assets/chevron-right-CKA5zVsM.js">
+    <link rel="modulepreload" crossorigin href="./assets/dropdown-menu-C40jM9o4.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-to-image-D6GUC5q6.js">
+    <link rel="modulepreload" crossorigin href="./assets/download-DMxOzI7b.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-CUK1W5bI.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-cw-Bf-rx_aV.js">
+    <link rel="modulepreload" crossorigin href="./assets/tree-actions-CG5g7aUQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/ellipsis-Dfik_tuW.js">
+    <link rel="modulepreload" crossorigin href="./assets/external-link-Bp3BxyRA.js">
+    <link rel="modulepreload" crossorigin href="./assets/spinner-Ck-Hgfvj.js">
+    <link rel="modulepreload" crossorigin href="./assets/message-circle-BQB1AIAg.js">
+    <link rel="modulepreload" crossorigin href="./assets/hat-glasses-C8LSY3HT.js">
+    <link rel="modulepreload" crossorigin href="./assets/package-DPlscLzt.js">
+    <link rel="modulepreload" crossorigin href="./assets/datasource-DrODSIs0.js">
+    <link rel="modulepreload" crossorigin href="./assets/kbd-Cwh96ZBE.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-dmKwNsrp.js">
+    <link rel="modulepreload" crossorigin href="./assets/useInstallPackage-DsD08SLK.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-B6AklCzD.js">
+    <link rel="modulepreload" crossorigin href="./assets/cell-link-6burT2XF.js">
+    <link rel="modulepreload" crossorigin href="./assets/MarimoErrorOutput-DqpoYOvw.js">
+    <link rel="modulepreload" crossorigin href="./assets/VisuallyHidden-CBMDmozt.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDateFormatter-BiqAQ-zI.js">
+    <link rel="modulepreload" crossorigin href="./assets/en-US-yTIMUO13.js">
+    <link rel="modulepreload" crossorigin href="./assets/isValid-nQ3Iam8J.js">
+    <link rel="modulepreload" crossorigin href="./assets/dates-B58T85Jq.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-CNPGWpMu.js">
+    <link rel="modulepreload" crossorigin href="./assets/precisionRound-Bq_nmf5u.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-Dm4DaIgg.js">
+    <link rel="modulepreload" crossorigin href="./assets/vega-loader.browser-AQmjV9CX.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-BG35uS_N.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-icons.esm-hr79-MCS.js">
+    <link rel="modulepreload" crossorigin href="./assets/emotion-is-prop-valid.esm-nLO-SoUf.js">
+    <link rel="modulepreload" crossorigin href="./assets/useIframeCapabilities-C7Di8f2y.js">
+    <link rel="modulepreload" crossorigin href="./assets/error-banner-Dw5YY9wq.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-49LGK4zG.js">
+    <link rel="modulepreload" crossorigin href="./assets/formats-C6s96nu2.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-DmqOOjfe.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-resizable-panels.browser.esm-BSRAHC4P.js">
+    <link rel="modulepreload" crossorigin href="./assets/JsonOutput-CzIGPEZQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/chart-no-axes-column-ChZdjJhj.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-function-DkZweMAs.js">
+    <link rel="modulepreload" crossorigin href="./assets/spec-DKsAmLTi.js">
+    <link rel="modulepreload" crossorigin href="./assets/semaphore-BjoL5P0h.js">
+    <link rel="modulepreload" crossorigin href="./assets/fileToBase64-NhpNrK5l.js">
+    <link rel="modulepreload" crossorigin href="./assets/useBoolean-BXC4CItZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/code-xml-B7x62Eeh.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-headphone-rFCxFRI8.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-DF8n85RA.js">
+    <link rel="modulepreload" crossorigin href="./assets/image-ab13yGv4.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-icons-DdGYuADJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/globe-BQf75qV_.js">
+    <link rel="modulepreload" crossorigin href="./assets/markdown-export-0rLbaq8b.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-grid-types-DgHVN_Zz.js">
+    <link rel="modulepreload" crossorigin href="./assets/glide-utils-UGsrRHYj.js">
+    <link rel="modulepreload" crossorigin href="./assets/column-preview-riSXbYe_.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-B58Ib8Ir.js">
+    <link rel="modulepreload" crossorigin href="./assets/triangle-alert-MihykDYG.js">
+    <link rel="modulepreload" crossorigin href="./assets/prop-types-Djf4O40e.js">
+    <link rel="modulepreload" crossorigin href="./assets/es-CrFhA96G.js">
+    <link rel="modulepreload" crossorigin href="./assets/renderShortcut-X-CJUSM8.js">
+    <link rel="modulepreload" crossorigin href="./assets/bundle.esm-DzY74mzC.js">
+    <link rel="modulepreload" crossorigin href="./assets/icons-CjLa9BiH.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDeepCompareMemoize-CLytDdMl.js">
+    <link rel="modulepreload" crossorigin href="./assets/pathUtils-Cryrlpma.js">
+    <link rel="modulepreload" crossorigin href="./assets/floating-outline-DaUHnl_e.js">
+    <link rel="stylesheet" crossorigin href="./assets/cells-D-c15Ks-.css">
+    <link rel="stylesheet" crossorigin href="./assets/markdown-renderer-B7zTpxjS.css">
+    <link rel="stylesheet" crossorigin href="./assets/JsonOutput-BQtz7-np.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-C7yAojRA.css">
+  <marimo-wasm hidden=""></marimo-wasm>
+    <script>
+        if (window.location.protocol === 'file:') {
+            alert('Warning: This file must be served by an HTTP server to function correctly.');
+        }
+    </script>
+    
+    <style>
+        #save-button {
+            display: none !important;
+        }
+        #filename-input {
+            display: none !important;
+        }
+    </style>
+    
+<script data-marimo="true">
+    Object.defineProperty(window, "__MARIMO_EXPORT_CONTEXT__", {
+        value: Object.freeze({
+            trusted: true,
+            notebookCode: "import marimo\n\n__generated_with = \"0.24.2\"\napp = marimo.App(width=\"medium\")\n\n\n@app.cell\ndef _():\n    import base64\n    import json\n\n    import altair as alt\n    import marimo as mo\n    import pandas as pd\n\n    return alt, base64, json, mo, pd\n\n\n@app.cell\ndef _(base64, json, mo):\n    # The host app embeds this notebook in an iframe and passes the current site's\n    # measurements through the URL as base64-encoded JSON in the `data` query param.\n    _raw = mo.query_params().get(\"data\")\n\n    def _decode(raw):\n        if not raw:\n            return None\n        try:\n            return json.loads(base64.urlsafe_b64decode(raw.encode()).decode())\n        except Exception:\n            try:\n                return json.loads(raw)\n            except Exception:\n                return None\n\n    payload = _decode(_raw)\n    return (payload,)\n\n\n@app.cell\ndef _(payload):\n    stats = (payload or {}).get(\"stats\") or {}\n    streamflow = (payload or {}).get(\"streamflow\")\n    return stats, streamflow\n\n\n@app.cell\ndef _():\n    # Shared dark styling so the charts sit cleanly inside the glass panel.\n    INK = \"#b7c7dc\"\n    MUTED = \"#64788f\"\n    ACCENT = \"#38bdf8\"\n\n    def style(chart):\n        return (\n            chart.configure(background=\"transparent\")\n            .configure_view(strokeOpacity=0)\n            .configure_axis(\n                labelColor=INK,\n                titleColor=MUTED,\n                gridColor=\"#1c2836\",\n                domainColor=\"#2a3a4d\",\n                tickColor=\"#2a3a4d\",\n                labelFontSize=11,\n                titleFontSize=11,\n            )\n            .configure_legend(labelColor=INK, titleColor=MUTED)\n            .configure_title(color=\"#e9eff8\", fontSize=13)\n        )\n\n    return ACCENT, MUTED, style\n\n\n@app.cell\ndef _(ACCENT, MUTED, alt, mo, pd, streamflow, style):\n    if streamflow and streamflow.get(\"readings\"):\n        _readings = streamflow[\"readings\"]\n        _median = streamflow.get(\"median\")\n        _gauge = (streamflow.get(\"gauge\") or {}).get(\"name\", \"USGS gauge\")\n        _dist = (streamflow.get(\"gauge\") or {}).get(\"distanceKm\")\n\n        _df = pd.DataFrame(_readings)\n        _df[\"date\"] = pd.to_datetime(_df[\"date\"])\n\n        _line = (\n            alt.Chart(_df)\n            .mark_line(point=alt.OverlayMarkDef(color=ACCENT, size=55), color=ACCENT, strokeWidth=2)\n            .encode(\n                x=alt.X(\"date:T\", title=\"Capture date\"),\n                y=alt.Y(\"discharge:Q\", title=\"Discharge (ft\u00b3/s)\"),\n                tooltip=[\n                    alt.Tooltip(\"date:T\", title=\"Date\"),\n                    alt.Tooltip(\"discharge:Q\", title=\"ft\u00b3/s\", format=\",\"),\n                    alt.Tooltip(\"ratioToMedian:Q\", title=\"\u00d7 median\", format=\".2f\"),\n                    alt.Tooltip(\"percentile:Q\", title=\"percentile\", format=\".0%\"),\n                ],\n            )\n        )\n\n        _layers = [_line]\n        if _median:\n            _rule = (\n                alt.Chart(pd.DataFrame({\"y\": [_median]}))\n                .mark_rule(color=MUTED, strokeDash=[4, 4])\n                .encode(y=\"y:Q\")\n            )\n            _layers.append(_rule)\n\n        _chart = style(\n            alt.layer(*_layers)\n            .properties(height=220, width=\"container\", title=\"Streamflow on each capture\")\n            .resolve_scale(y=\"shared\")\n        )\n        _note = f\"{_gauge}\" + (f\" \u00b7 {_dist} km away\" if _dist else \"\") + (\n            f\" \u00b7 median {_median:,.0f} ft\u00b3/s\" if _median else \"\"\n        )\n        streamflow_view = mo.vstack([mo.ui.altair_chart(_chart, chart_selection=False), mo.md(f\"\u003Csmall\u003E{_note}\u003C/small\u003E\")])\n    else:\n        streamflow_view = mo.callout(\n            mo.md(\"No USGS stream gauge with a record sits near this site, so there is no discharge series to plot.\"),\n            kind=\"info\",\n        )\n    streamflow_view\n    return\n\n\n@app.cell\ndef _(ACCENT, alt, mo, pd, stats, style):\n    _rows = [\n        {\"metric\": \"Channels\", \"value\": stats.get(\"channelCount\", 0)},\n        {\"metric\": \"Roofs\", \"value\": stats.get(\"buildingCount\", 0)},\n        {\"metric\": \"Water\", \"value\": stats.get(\"waterbodyCount\", 0)},\n        {\"metric\": \"Wetland\", \"value\": stats.get(\"wetlandCount\", 0)},\n    ]\n    if any(r[\"value\"] for r in _rows):\n        _df = pd.DataFrame(_rows)\n        _bars = (\n            alt.Chart(_df)\n            .mark_bar(color=ACCENT)\n            .encode(\n                x=alt.X(\"value:Q\", title=\"Feature count\"),\n                y=alt.Y(\"metric:N\", title=None, sort=\"-x\"),\n                tooltip=[alt.Tooltip(\"metric:N\"), alt.Tooltip(\"value:Q\", format=\",\")],\n            )\n            .properties(height=170, width=\"container\", title=\"Mapped features within 3 km\")\n        )\n        measurements_view = mo.ui.altair_chart(style(_bars), chart_selection=False)\n    else:\n        measurements_view = mo.callout(mo.md(\"No mapped features were returned for this site.\"), kind=\"info\")\n    measurements_view\n    return\n\n\n@app.cell\ndef _(mo, stats):\n    _km = stats.get(\"channelKm\")\n    _imp = stats.get(\"impervousKm\")\n    _elev = stats.get(\"elevationRange\")\n    _named = stats.get(\"namedChannels\") or []\n    _bits = []\n    if _km:\n        _bits.append(f\"**{_km:.1f} km** of channel\")\n    if _imp:\n        _bits.append(f\"**{_imp:.0f} km** of road\")\n    if _elev and len(_elev) == 2:\n        _bits.append(f\"**{_elev[1] - _elev[0]:.0f} m** relief ({_elev[0]}\u2013{_elev[1]} m)\")\n    _foot = \" \u00b7 \".join(_bits) if _bits else \"\"\n    _channels = (\"Named channels: \" + \" \u00b7 \".join(_named)) if _named else \"\"\n    mo.md(\"\\n\\n\".join(x for x in [_foot, _channels] if x)) if (_foot or _channels) else None\n    return\n\n\nif __name__ == \"__main__\":\n    app.run()\n",
+        }),
+        writable: false,
+        configurable: false,
+    });
+</script>
+<marimo-code hidden="">import%20marimo%0A%0A__generated_with%20%3D%20%220.24.2%22%0Aapp%20%3D%20marimo.App(width%3D%22medium%22)%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20import%20base64%0A%20%20%20%20import%20json%0A%0A%20%20%20%20import%20altair%20as%20alt%0A%20%20%20%20import%20marimo%20as%20mo%0A%20%20%20%20import%20pandas%20as%20pd%0A%0A%20%20%20%20return%20alt%2C%20base64%2C%20json%2C%20mo%2C%20pd%0A%0A%0A%40app.cell%0Adef%20_(base64%2C%20json%2C%20mo)%3A%0A%20%20%20%20%23%20The%20host%20app%20embeds%20this%20notebook%20in%20an%20iframe%20and%20passes%20the%20current%20site's%0A%20%20%20%20%23%20measurements%20through%20the%20URL%20as%20base64-encoded%20JSON%20in%20the%20%60data%60%20query%20param.%0A%20%20%20%20_raw%20%3D%20mo.query_params().get(%22data%22)%0A%0A%20%20%20%20def%20_decode(raw)%3A%0A%20%20%20%20%20%20%20%20if%20not%20raw%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20None%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20json.loads(base64.urlsafe_b64decode(raw.encode()).decode())%0A%20%20%20%20%20%20%20%20except%20Exception%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20json.loads(raw)%0A%20%20%20%20%20%20%20%20%20%20%20%20except%20Exception%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20None%0A%0A%20%20%20%20payload%20%3D%20_decode(_raw)%0A%20%20%20%20return%20(payload%2C)%0A%0A%0A%40app.cell%0Adef%20_(payload)%3A%0A%20%20%20%20stats%20%3D%20(payload%20or%20%7B%7D).get(%22stats%22)%20or%20%7B%7D%0A%20%20%20%20streamflow%20%3D%20(payload%20or%20%7B%7D).get(%22streamflow%22)%0A%20%20%20%20return%20stats%2C%20streamflow%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20%23%20Shared%20dark%20styling%20so%20the%20charts%20sit%20cleanly%20inside%20the%20glass%20panel.%0A%20%20%20%20INK%20%3D%20%22%23b7c7dc%22%0A%20%20%20%20MUTED%20%3D%20%22%2364788f%22%0A%20%20%20%20ACCENT%20%3D%20%22%2338bdf8%22%0A%0A%20%20%20%20def%20style(chart)%3A%0A%20%20%20%20%20%20%20%20return%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20chart.configure(background%3D%22transparent%22)%0A%20%20%20%20%20%20%20%20%20%20%20%20.configure_view(strokeOpacity%3D0)%0A%20%20%20%20%20%20%20%20%20%20%20%20.configure_axis(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20labelColor%3DINK%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20titleColor%3DMUTED%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gridColor%3D%22%231c2836%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20domainColor%3D%22%232a3a4d%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20tickColor%3D%22%232a3a4d%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20labelFontSize%3D11%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20titleFontSize%3D11%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20.configure_legend(labelColor%3DINK%2C%20titleColor%3DMUTED)%0A%20%20%20%20%20%20%20%20%20%20%20%20.configure_title(color%3D%22%23e9eff8%22%2C%20fontSize%3D13)%0A%20%20%20%20%20%20%20%20)%0A%0A%20%20%20%20return%20ACCENT%2C%20MUTED%2C%20style%0A%0A%0A%40app.cell%0Adef%20_(ACCENT%2C%20MUTED%2C%20alt%2C%20mo%2C%20pd%2C%20streamflow%2C%20style)%3A%0A%20%20%20%20if%20streamflow%20and%20streamflow.get(%22readings%22)%3A%0A%20%20%20%20%20%20%20%20_readings%20%3D%20streamflow%5B%22readings%22%5D%0A%20%20%20%20%20%20%20%20_median%20%3D%20streamflow.get(%22median%22)%0A%20%20%20%20%20%20%20%20_gauge%20%3D%20(streamflow.get(%22gauge%22)%20or%20%7B%7D).get(%22name%22%2C%20%22USGS%20gauge%22)%0A%20%20%20%20%20%20%20%20_dist%20%3D%20(streamflow.get(%22gauge%22)%20or%20%7B%7D).get(%22distanceKm%22)%0A%0A%20%20%20%20%20%20%20%20_df%20%3D%20pd.DataFrame(_readings)%0A%20%20%20%20%20%20%20%20_df%5B%22date%22%5D%20%3D%20pd.to_datetime(_df%5B%22date%22%5D)%0A%0A%20%20%20%20%20%20%20%20_line%20%3D%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20alt.Chart(_df)%0A%20%20%20%20%20%20%20%20%20%20%20%20.mark_line(point%3Dalt.OverlayMarkDef(color%3DACCENT%2C%20size%3D55)%2C%20color%3DACCENT%2C%20strokeWidth%3D2)%0A%20%20%20%20%20%20%20%20%20%20%20%20.encode(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20x%3Dalt.X(%22date%3AT%22%2C%20title%3D%22Capture%20date%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20y%3Dalt.Y(%22discharge%3AQ%22%2C%20title%3D%22Discharge%20(ft%C2%B3%2Fs)%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20tooltip%3D%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20alt.Tooltip(%22date%3AT%22%2C%20title%3D%22Date%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20alt.Tooltip(%22discharge%3AQ%22%2C%20title%3D%22ft%C2%B3%2Fs%22%2C%20format%3D%22%2C%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20alt.Tooltip(%22ratioToMedian%3AQ%22%2C%20title%3D%22%C3%97%20median%22%2C%20format%3D%22.2f%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20alt.Tooltip(%22percentile%3AQ%22%2C%20title%3D%22percentile%22%2C%20format%3D%22.0%25%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20)%0A%0A%20%20%20%20%20%20%20%20_layers%20%3D%20%5B_line%5D%0A%20%20%20%20%20%20%20%20if%20_median%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20_rule%20%3D%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20alt.Chart(pd.DataFrame(%7B%22y%22%3A%20%5B_median%5D%7D))%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.mark_rule(color%3DMUTED%2C%20strokeDash%3D%5B4%2C%204%5D)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.encode(y%3D%22y%3AQ%22)%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20_layers.append(_rule)%0A%0A%20%20%20%20%20%20%20%20_chart%20%3D%20style(%0A%20%20%20%20%20%20%20%20%20%20%20%20alt.layer(*_layers)%0A%20%20%20%20%20%20%20%20%20%20%20%20.properties(height%3D220%2C%20width%3D%22container%22%2C%20title%3D%22Streamflow%20on%20each%20capture%22)%0A%20%20%20%20%20%20%20%20%20%20%20%20.resolve_scale(y%3D%22shared%22)%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20_note%20%3D%20f%22%7B_gauge%7D%22%20%2B%20(f%22%20%C2%B7%20%7B_dist%7D%20km%20away%22%20if%20_dist%20else%20%22%22)%20%2B%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22%20%C2%B7%20median%20%7B_median%3A%2C.0f%7D%20ft%C2%B3%2Fs%22%20if%20_median%20else%20%22%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20streamflow_view%20%3D%20mo.vstack(%5Bmo.ui.altair_chart(_chart%2C%20chart_selection%3DFalse)%2C%20mo.md(f%22%3Csmall%3E%7B_note%7D%3C%2Fsmall%3E%22)%5D)%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20streamflow_view%20%3D%20mo.callout(%0A%20%20%20%20%20%20%20%20%20%20%20%20mo.md(%22No%20USGS%20stream%20gauge%20with%20a%20record%20sits%20near%20this%20site%2C%20so%20there%20is%20no%20discharge%20series%20to%20plot.%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20kind%3D%22info%22%2C%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20streamflow_view%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(ACCENT%2C%20alt%2C%20mo%2C%20pd%2C%20stats%2C%20style)%3A%0A%20%20%20%20_rows%20%3D%20%5B%0A%20%20%20%20%20%20%20%20%7B%22metric%22%3A%20%22Channels%22%2C%20%22value%22%3A%20stats.get(%22channelCount%22%2C%200)%7D%2C%0A%20%20%20%20%20%20%20%20%7B%22metric%22%3A%20%22Roofs%22%2C%20%22value%22%3A%20stats.get(%22buildingCount%22%2C%200)%7D%2C%0A%20%20%20%20%20%20%20%20%7B%22metric%22%3A%20%22Water%22%2C%20%22value%22%3A%20stats.get(%22waterbodyCount%22%2C%200)%7D%2C%0A%20%20%20%20%20%20%20%20%7B%22metric%22%3A%20%22Wetland%22%2C%20%22value%22%3A%20stats.get(%22wetlandCount%22%2C%200)%7D%2C%0A%20%20%20%20%5D%0A%20%20%20%20if%20any(r%5B%22value%22%5D%20for%20r%20in%20_rows)%3A%0A%20%20%20%20%20%20%20%20_df%20%3D%20pd.DataFrame(_rows)%0A%20%20%20%20%20%20%20%20_bars%20%3D%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20alt.Chart(_df)%0A%20%20%20%20%20%20%20%20%20%20%20%20.mark_bar(color%3DACCENT)%0A%20%20%20%20%20%20%20%20%20%20%20%20.encode(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20x%3Dalt.X(%22value%3AQ%22%2C%20title%3D%22Feature%20count%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20y%3Dalt.Y(%22metric%3AN%22%2C%20title%3DNone%2C%20sort%3D%22-x%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20tooltip%3D%5Balt.Tooltip(%22metric%3AN%22)%2C%20alt.Tooltip(%22value%3AQ%22%2C%20format%3D%22%2C%22)%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20.properties(height%3D170%2C%20width%3D%22container%22%2C%20title%3D%22Mapped%20features%20within%203%20km%22)%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20measurements_view%20%3D%20mo.ui.altair_chart(style(_bars)%2C%20chart_selection%3DFalse)%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20measurements_view%20%3D%20mo.callout(mo.md(%22No%20mapped%20features%20were%20returned%20for%20this%20site.%22)%2C%20kind%3D%22info%22)%0A%20%20%20%20measurements_view%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(mo%2C%20stats)%3A%0A%20%20%20%20_km%20%3D%20stats.get(%22channelKm%22)%0A%20%20%20%20_imp%20%3D%20stats.get(%22impervousKm%22)%0A%20%20%20%20_elev%20%3D%20stats.get(%22elevationRange%22)%0A%20%20%20%20_named%20%3D%20stats.get(%22namedChannels%22)%20or%20%5B%5D%0A%20%20%20%20_bits%20%3D%20%5B%5D%0A%20%20%20%20if%20_km%3A%0A%20%20%20%20%20%20%20%20_bits.append(f%22**%7B_km%3A.1f%7D%20km**%20of%20channel%22)%0A%20%20%20%20if%20_imp%3A%0A%20%20%20%20%20%20%20%20_bits.append(f%22**%7B_imp%3A.0f%7D%20km**%20of%20road%22)%0A%20%20%20%20if%20_elev%20and%20len(_elev)%20%3D%3D%202%3A%0A%20%20%20%20%20%20%20%20_bits.append(f%22**%7B_elev%5B1%5D%20-%20_elev%5B0%5D%3A.0f%7D%20m**%20relief%20(%7B_elev%5B0%5D%7D%E2%80%93%7B_elev%5B1%5D%7D%20m)%22)%0A%20%20%20%20_foot%20%3D%20%22%20%C2%B7%20%22.join(_bits)%20if%20_bits%20else%20%22%22%0A%20%20%20%20_channels%20%3D%20(%22Named%20channels%3A%20%22%20%2B%20%22%20%C2%B7%20%22.join(_named))%20if%20_named%20else%20%22%22%0A%20%20%20%20mo.md(%22%5Cn%5Cn%22.join(x%20for%20x%20in%20%5B_foot%2C%20_channels%5D%20if%20x))%20if%20(_foot%20or%20_channels)%20else%20None%0A%20%20%20%20return%0A%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20app.run()%0A</marimo-code></head>
+  <body>
+    <div id="root"></div>
+    <script data-marimo="true">
+      Object.defineProperty(window, "__MARIMO_MOUNT_CONFIG__", {
+        value: Object.freeze({
+            "filename": "notebook.py",
+            "cwd": "",
+            "lspWorkspace": null,
+            "mode": "read",
+            "version": "0.24.2",
+            "serverToken": "unused",
+            "config": {"ai": {"allow_provider_config": true, "custom_providers": {}, "enabled": true, "models": {"custom_models": [], "displayed_models": []}}, "completion": {"activate_on_typing": true, "auto_close_pairs": true, "copilot": false, "signature_hint_on_typing": false}, "diagnostics": {"sql_linter": true}, "display": {"cell_output": "below", "code_editor_font_size": 14, "code_lens": true, "dataframes": "rich", "default_table_max_columns": 50, "default_table_page_size": 10, "default_width": "medium", "reference_highlighting": true, "theme": "light"}, "formatting": {"line_length": 79}, "keymap": {"overrides": {}, "preset": "default"}, "language_servers": {"pylsp": {"enable_flake8": false, "enable_mypy": true, "enable_pydocstyle": false, "enable_pyflakes": false, "enable_pylint": false, "enable_ruff": true, "enabled": false}}, "mcp": {"mcpServers": {}, "presets": []}, "package_management": {"manager": "pip"}, "runtime": {"auto_instantiate": false, "auto_reload": "off", "default_csv_encoding": "utf-8", "default_sql_output": "auto", "on_cell_change": "autorun", "output_max_bytes": 8000000, "reactive_tests": true, "show_tracebacks": false, "std_stream_max_bytes": 1000000, "watcher_on_save": "lazy"}, "save": {"autosave": "off", "autosave_delay": 1000, "format_on_save": false}, "server": {"browser": "default", "follow_symlink": false}, "snippets": {"custom_paths": [], "include_default_snippets": true}},
+            "configOverrides": {},
+            "appConfig": {"sql_output": "auto", "width": "medium"},
+            "layout": null,
+            "view": {"showAppCode": false},
+            "notebook": null,
+            "session": null,
+            "runtimeConfig": null
+        }),
+        writable: false,
+        configurable: false,
+      });
+    </script>
+  </body>
+</html>

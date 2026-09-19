@@ -32,6 +32,8 @@ export type SiteMapProps = {
   flowSpeed: number;
   /** Channel width multiplier derived from measured discharge. */
   flowScale: number;
+  /** Waterbody fill opacity for the selected capture's discharge. */
+  waterOpacity: number;
   onReady?: (map: MapLibreMap) => void;
   onFirstIdle?: () => void;
   onEpochLoadingChange?: (loading: boolean) => void;
@@ -133,6 +135,7 @@ export default function SiteMap({
   toggles,
   flowSpeed,
   flowScale,
+  waterOpacity,
   onReady,
   onFirstIdle,
   onEpochLoadingChange,
@@ -321,6 +324,12 @@ export default function SiteMap({
       map.setPaintProperty(layer, "line-width", channelWidth(spec.base, spec.perRank, flowScale));
     }
   }, [flowScale, ready]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready || !map.getLayer("waterbodies-fill")) return;
+    map.setPaintProperty("waterbodies-fill", "fill-opacity", waterOpacity);
+  }, [waterOpacity, ready]);
 
   useEffect(() => {
     const map = mapRef.current;

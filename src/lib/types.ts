@@ -46,6 +46,8 @@ export type HydrologyResponse = {
   buildings: GeoJSON.FeatureCollection<GeoJSON.Polygon>;
   roads: GeoJSON.FeatureCollection<GeoJSON.LineString>;
   stats: HydrologyStats;
+  /** Capture date the water layers were reconstructed for, if not today's map. */
+  asOf?: string;
 };
 
 export type { FlowReading, Gauge, StreamflowResult } from "@/lib/streamflow";

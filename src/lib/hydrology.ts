@@ -7,7 +7,9 @@ type PolyFeature = GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>;
 const OVERPASS_ENDPOINTS = [
   "https://overpass-api.de/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.openstreetmap.fr/api/interpreter",
 ];
+const OVERPASS_ATTEMPT_MS = 12000;
 
 /** Relative visual weight of a channel, used to drive line widths on the map. */
 function osmChannelRank(waterway: string | undefined) {
@@ -57,8 +59,11 @@ function ring(geometry: { lat: number; lon: number }[]) {
 }
 
 async function overpass(query: string): Promise<OverpassElement[]> {
-  let lastError: unknown = null;
-  for (const endpoint of OVERPASS_ENDPOINTS) {
+  const body = new URLSearchParams({ data: query }).toString();
+  const controllers = OVERPASS_ENDPOINTS.map(() => new AbortController());
+
+  const attempts = OVERPASS_ENDPOINTS.map(async (endpoint, index) => {
+    const timer = setTimeout(() => controllers[index].abort(), OVERPASS_ATTEMPT_MS);
     try {
       const res = await fetch(endpoint, {
         method: "POST",
@@ -66,24 +71,42 @@ async function overpass(query: string): Promise<OverpassElement[]> {
           "User-Agent": USER_AGENT,
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({ data: query }).toString(),
+        body,
+        signal: controllers[index].signal,
         next: { revalidate: 3600 },
       });
       if (!res.ok) throw new Error(`Overpass responded ${res.status}`);
       const json = (await res.json()) as { elements: OverpassElement[] };
       return json.elements ?? [];
-    } catch (error) {
-      lastError = error;
+    } finally {
+      clearTimeout(timer);
     }
+  });
+
+  try {
+    const elements = await Promise.any(attempts);
+    for (const controller of controllers) controller.abort();
+    return elements;
+  } catch {
+    console.warn("Overpass unavailable; falling back to NHD / already-loaded layers.");
+    return [];
   }
-  console.warn("Overpass unavailable:", lastError);
-  return [];
+}
+
+function emptyOsm() {
+  return {
+    flowlines: [] as LineFeature[],
+    waterbodies: [] as PolyFeature[],
+    wetlands: [] as PolyFeature[],
+    buildings: [] as GeoJSON.Feature<GeoJSON.Polygon>[],
+    roads: [] as LineFeature[],
+  };
 }
 
 async function fetchOsm(center: Bounds, inner: Bounds) {
   const wide = bboxString(center);
   const tight = bboxString(inner);
-  const query = `[out:json][timeout:50];
+  const query = `[out:json][timeout:20];
 (
   way["waterway"~"^(river|stream|canal|ditch|drain|tidal_channel)$"](${wide});
   way["natural"="water"](${wide});
@@ -136,6 +159,12 @@ out geom;`;
           name: tags.name ?? null,
           kind: tags.waterway,
           rank: osmChannelRank(tags.waterway),
+          regime:
+            tags.intermittent === "yes" || tags.seasonal === "yes" || tags.ephemeral === "yes"
+              ? tags.ephemeral === "yes"
+                ? "ephemeral"
+                : "intermittent"
+              : "perennial",
           lengthKm: lineLengthKm(coords),
           source: "OpenStreetMap",
         },
@@ -212,8 +241,21 @@ out geom;`;
 
 type NhdFeature = GeoJSON.Feature<
   GeoJSON.LineString | GeoJSON.MultiLineString,
-  { gnis_name?: string | null; ftype?: number; visibilityfilter?: number; lengthkm?: number }
+  {
+    gnis_name?: string | null;
+    ftype?: number;
+    fcode?: number;
+    visibilityfilter?: number;
+    lengthkm?: number;
+  }
 >;
+
+function nhdRegime(fcode: number | undefined): "perennial" | "intermittent" | "ephemeral" | "artificial" {
+  if (fcode === 46007) return "ephemeral";
+  if (fcode === 46003) return "intermittent";
+  if (fcode === 33600 || fcode === 33601 || fcode === 33603 || fcode === 55800) return "artificial";
+  return "perennial";
+}
 
 /**
  * USGS National Hydrography Dataset flowlines. NHD covers every mapped channel in the
@@ -228,7 +270,7 @@ async function fetchNhd(bounds: Bounds): Promise<LineFeature[]> {
   url.searchParams.set("inSR", "4326");
   url.searchParams.set("outSR", "4326");
   url.searchParams.set("spatialRel", "esriSpatialRelIntersects");
-  url.searchParams.set("outFields", "gnis_name,ftype,visibilityfilter,lengthkm");
+  url.searchParams.set("outFields", "gnis_name,ftype,fcode,visibilityfilter,lengthkm");
   url.searchParams.set("returnGeometry", "true");
   url.searchParams.set("f", "geojson");
   url.searchParams.set("resultRecordCount", "4000");
@@ -259,6 +301,7 @@ async function fetchNhd(bounds: Bounds): Promise<LineFeature[]> {
             name: props.gnis_name?.trim() || null,
             kind: props.ftype === 336 ? "canal" : props.ftype === 558 ? "flowpath" : "stream",
             rank: nhdChannelRank(props.visibilityfilter, props.ftype),
+            regime: nhdRegime(props.fcode),
             lengthKm: props.lengthkm ?? lineLengthKm(coords),
             source: "USGS NHD",
           },
@@ -296,12 +339,15 @@ export async function collectHydrology(
   lat: number,
   lon: number,
   radiusKm: number,
+  asOf?: string,
 ): Promise<HydrologyResponse> {
   const wide = boundsAround(lat, lon, radiusKm);
   const inner = boundsAround(lat, lon, Math.min(radiusKm, 1.6));
 
   const [osm, nhd, elevations] = await Promise.all([
-    fetchOsm(wide, inner),
+    // Historic Overpass attic queries 504 on public mirrors; year-matching uses
+    // today's NHD plus the gauge reading instead.
+    asOf ? Promise.resolve(emptyOsm()) : fetchOsm(wide, inner),
     fetchNhd(wide),
     Promise.all(
       [
@@ -314,8 +360,11 @@ export async function collectHydrology(
     ),
   ]);
 
-  // NHD is authoritative where it exists; OSM covers the rest of the world.
-  const flowlines = nhd.length >= 4 ? nhd : osm.flowlines;
+  // A dated query uses the channels OSM had on that capture day, so the drawn
+  // network can follow what the aerial actually shows. Today's map still prefers
+  // NHD inside the US, where it is denser than OSM.
+  const flowlines =
+    asOf && osm.flowlines.length >= 4 ? osm.flowlines : nhd.length >= 4 ? nhd : osm.flowlines;
   const sources = new Set<string>();
   for (const feature of flowlines) {
     const source = feature.properties?.source;
@@ -342,6 +391,7 @@ export async function collectHydrology(
     wetlands: { type: "FeatureCollection", features: osm.wetlands },
     buildings: { type: "FeatureCollection", features: osm.buildings },
     roads: { type: "FeatureCollection", features: osm.roads },
+    asOf,
     stats: {
       channelCount: flowlines.length,
       channelKm: Number(channelKm.toFixed(2)),
