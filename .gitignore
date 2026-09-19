@@ -24,3 +24,20 @@ __pycache__/
 
 # Local caches
 cache/
+
+# JavaScript dependencies and build output
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+**/public/maplibre/
+
+# Local runtime and editor artifacts
+*.log
+*.zip
+__MACOSX/
+.DS_Store
+Thumbs.db
+.vscode/
