@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amazon Distribution Center - Clear Brook",
+        "site_type": "warehouse_distribution_center",
+        "before_date": "2016-09-05",
+        "after_date": "2018-11-08",
+        "verification_date": "2023-10-23"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-78.083712, 39.286176],
+            [-78.071799, 39.286176],
+            [-78.071799, 39.292356],
+            [-78.083712, 39.292356],
+            [-78.083712, 39.286176]
+          ]
+        ]
+      }
+    }
+  ]
+}

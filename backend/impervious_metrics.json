@@ -1,0 +1,7 @@
+{
+  "method": "Largest OpenStreetMap building footprint inside site",
+  "roof_area_m2": 96718.95,
+  "roof_area_hectares": 9.67,
+  "roof_area_acres": 23.9,
+  "interpretation": "Conservative lower-bound impervious-area estimate. Parking lots, loading areas, and roads are excluded."
+}

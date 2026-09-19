@@ -1,0 +1,14 @@
+{
+  "before_date": "2016-07-20",
+  "after_date": "2020-07-03",
+  "comparison_resolution_m": 1.0,
+  "valid_comparison_area_m2": 705475.0,
+  "mean_ndvi_before": 0.0901,
+  "mean_ndvi_after": -0.2059,
+  "mean_ndvi_change": -0.296,
+  "vegetation_loss_m2": 281331.0,
+  "vegetation_loss_hectares": 28.13,
+  "vegetation_to_low_ndvi_proxy_m2": 118010.0,
+  "vegetation_to_low_ndvi_proxy_hectares": 11.8,
+  "warning": "The low-NDVI conversion result is a spectral proxy, not a surveyed impervious-surface measurement."
+}

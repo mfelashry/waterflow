@@ -1,0 +1,26 @@
+# Secrets
+.env
+.env.*
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Large geospatial rasters
+*.tif
+*.tiff
+*.aux.xml
+
+# Generated shapefile components
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.qix
+
+# Local caches
+cache/

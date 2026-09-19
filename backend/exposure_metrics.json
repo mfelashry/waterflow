@@ -1,0 +1,20 @@
+{
+  "site": "Amazon Distribution Center - Clear Brook",
+  "analysis_type": "D8 modeled overland flow",
+  "corridor_buffer_m": 40,
+  "corridor_area_hectares": 218.37,
+  "modeled_flow_path_length_km": 37.85,
+  "buildings_intersecting_corridor": 102,
+  "schools_intersecting_corridor": 0,
+  "road_segments_intersecting_corridor": 164,
+  "road_length_inside_corridor_km": 15.59,
+  "wetland_features_intersecting_corridor": 41,
+  "wetland_area_inside_corridor_hectares": 15.62,
+  "limitations": [
+    "Models terrain-based overland flow only.",
+    "Does not model storm drains or underground pipes.",
+    "Road culverts may alter real-world flow routes.",
+    "Building and road coverage comes from OpenStreetMap.",
+    "School count is limited by available OpenStreetMap data."
+  ]
+}
