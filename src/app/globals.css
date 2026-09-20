@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #04060c;
+  --color-abyss: #070b14;
+  --color-panel: #0b111d;
+  --color-hairline: #1c2738;
+  --color-ink: #e9eff8;
+  --color-muted: #8ea3c0;
+  --color-faint: #5d718c;
+  --color-hydro: #4cc9f0;
+  --color-flow: #22d3ee;
+  --color-terra: #d8b26a;
+  --color-alert: #f2785c;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #04060c;
+  color: #e9eff8;
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+}
+
+::selection {
+  background: rgba(76, 201, 240, 0.28);
+}
+
+/* Thin, unobtrusive scrollbars inside panels. */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(142, 163, 192, 0.35) transparent;
+}
+.scroll-slim::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgba(142, 163, 192, 0.3);
+  border-radius: 999px;
+}
+
+/* Transparent, glossy glass: a light tint over whatever is behind it, a bright top
+   edge, and a soft inner sheen rather than an opaque card. */
+.glass {
+  background:
+    linear-gradient(
+      165deg,
+      rgba(186, 218, 255, 0.14) 0%,
+      rgba(140, 180, 230, 0.06) 30%,
+      rgba(255, 255, 255, 0.02) 100%
+    ),
+    rgba(6, 11, 20, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(30px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.05),
+    0 28px 70px -30px rgba(0, 0, 0, 0.95);
+}
+
+/* Crystal black glass: a deep, glossy pane that stays readable over aerial imagery. */
+.glass-dark {
+  background:
+    linear-gradient(
+      168deg,
+      rgba(150, 195, 245, 0.13) 0%,
+      rgba(90, 140, 200, 0.05) 38%,
+      rgba(255, 255, 255, 0.015) 100%
+    ),
+    rgba(4, 8, 14, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(34px) saturate(175%);
+  -webkit-backdrop-filter: blur(34px) saturate(175%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.05),
+    0 26px 64px -26px rgba(0, 0, 0, 0.96);
+}
+
+.glass-quiet {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 18px 44px -26px rgba(0, 0, 0, 0.9);
+}
+
+
+.hairline {
+  border-color: rgba(120, 152, 196, 0.16);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes reticle-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.85;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.loading-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(76, 201, 240, 0.16),
+    transparent
+  );
+  animation: sheen 1.6s ease-in-out infinite;
+}
+
+/* MapLibre chrome restyled to match the dark instrument look. */
+.maplibregl-ctrl-group {
+  background: rgba(10, 16, 27, 0.9) !important;
+  border: 1px solid rgba(120, 152, 196, 0.18) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid rgba(120, 152, 196, 0.14) !important;
+}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(88%) sepia(9%) saturate(500%) hue-rotate(178deg);
+}
+.maplibregl-ctrl-group button:hover {
+  background: rgba(76, 201, 240, 0.14) !important;
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(6, 10, 18, 0.72) !important;
+  color: #8ea3c0 !important;
+  font-size: 10px !important;
+  border-radius: 8px 0 0 0 !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: #8ea3c0 !important;
+}
+.maplibregl-ctrl-scale {
+  background: rgba(6, 10, 18, 0.72) !important;
+  border-color: rgba(120, 152, 196, 0.3) !important;
+  color: #cfe0f3 !important;
+  font-size: 10px !important;
+}
+
+/* Kill MapLibre's default light canvas wash behind the globe. */
+.maplibregl-map,
+.maplibregl-canvas,
+.maplibregl-canvas-container {
+  background: #04060c !important;
+}
+
+/* Demo path: plain text over the globe, no cards or icons. */
+.demo-link {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Mobile site sheet sits above the map chrome without eating the whole screen. */
+.mobile-sheet {
+  background:
+    linear-gradient(180deg, rgba(12, 20, 32, 0.72) 0%, rgba(4, 8, 14, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  box-shadow: 0 -18px 50px -20px rgba(0, 0, 0, 0.85);
+}

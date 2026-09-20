@@ -1,0 +1,4 @@
+# Python companion for the Water Flow Marimo charts tab.
+marimo>=0.24.0
+pandas>=2.0.0
+altair>=5.0.0
