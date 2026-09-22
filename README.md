@@ -143,36 +143,45 @@ Water Flow combines public and external geospatial sources including:
 ## 🔗 Contributors
 
 <table>
-  <tr>
-    <td align="center" width="220">
-      <a href="https://linkedin.com/in/melashry">
-        <img src="https://d112y698adiu2z.cloudfront.net/photos/production/user_photos/005/367/150/datas/profile.jpeg" width="140" height="140" alt="Mohamed Elashry">
-        <br><br>
-        <strong>Mohamed Elashry</strong>
-      </a>
-      <br>
-      <sub>Builder · Developer</sub>
-      <br><br>
-      <a href="https://linkedin.com/in/melashry">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-      </a>
-    </td>
+<tr>
+<td align="center">
 
-    <td align="center" width="220">
-      <a href="https://www.linkedin.com/in/hamzaelashry/">
-        <img src="https://avatars.githubusercontent.com/u/322954558?v=4" width="140" height="140" alt="Hamza Elashry">
-        <br><br>
-        <strong>Hamza Elashry</strong>
-      </a>
-      <br>
-      <sub>Builder · Developer</sub>
-      <br><br>
-      <a href="https://www.linkedin.com/in/hamzaelashry/">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-      </a>
-    </td>
-  </tr>
+<a href="https://linkedin.com/in/melashry">
+<img src="https://d112y698adiu2z.cloudfront.net/photos/production/user_photos/005/367/150/datas/profile.jpeg" width="120" alt="Mohamed Elashry"/>
+<br/>
+<b>Mohamed Elashry</b>
+</a>
+
+<br/>
+<sub>Builder · Developer</sub>
+<br/><br/>
+
+<a href="https://linkedin.com/in/melashry">
+<img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
+
+</td>
+
+<td align="center">
+
+<a href="https://www.linkedin.com/in/hamzaelashry/">
+<img src="https://avatars.githubusercontent.com/u/322954558?v=4" width="120" alt="Hamza Elashry"/>
+<br/>
+<b>Hamza Elashry</b>
+</a>
+
+<br/>
+<sub>Builder · Developer</sub>
+<br/><br/>
+
+<a href="https://www.linkedin.com/in/hamzaelashry/">
+<img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
+
+</td>
+</tr>
 </table>
+
 ---
 
 ## Links
