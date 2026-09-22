@@ -2,7 +2,7 @@
 
 # Water Flow
 
-### Trace where water goes — anywhere on Earth.
+### Trace where water goes anywhere on Earth.
 
 An interactive hydrology explorer built at **HopHacks**.  
 Search any place on Earth, fly down from orbit, and analyze water movement using terrain, satellite imagery, hydrology, flood data, soil data, and AI-assisted research.
