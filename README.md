@@ -1,89 +1,184 @@
+<div align="center">
+
 # Water Flow
 
-HopHacks project. Full product brief: **[PROJECT_PROMPT.md](./PROJECT_PROMPT.md)**.
+### Trace where water goes — anywhere on Earth.
 
-Search any place on Earth, fly down to it from orbit, and trace where its water goes
-across real terrain, live satellite imagery and a decade of archived captures.
+An interactive hydrology explorer built at **HopHacks**.  
+Search any place on Earth, fly down from orbit, and analyze water movement using terrain, satellite imagery, hydrology, flood data, soil data, and AI-assisted research.
 
-## Highlights in this build
+<br/>
 
-- **Ask Grok + research** - measurements, external case studies / reports, and interpretation with source links
-- **Marimo charts tab** - Python companion notebook for rainfall, gauge flow, hydrology, soil, and flood
-- **Smooth local sites** - capped, simplified channels so dense places stay fluid
-- **Hydrology cache** - server + browser session cache so revisits paint instantly
-- **Ground tab** - surface water inventory, USDA SSURGO soil / infiltration, FEMA flood zones + outlook
-- **Topo + flood layers** - USGS topographic basemap and FEMA NFHL polygons
-- **City report** - Wikipedia/Wikidata + flood/soil + measurements; Print / PDF from the Report tab
-- **Mobile panel** - bottom sheet with Wet/Dry shortcuts
+<a href="https://waterflow-teal.vercel.app/">
+  <img src="https://img.shields.io/badge/Live_Demo-Open-111111?style=for-the-badge&logo=vercel&logoColor=white" />
+</a>
+<a href="https://github.com/mfelashry/waterflow">
+  <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" />
+</a>
+<a href="https://devpost.com/software/waterflow-41mrqd">
+  <img src="https://img.shields.io/badge/Devpost-Project-003E54?style=for-the-badge&logo=devpost&logoColor=white" />
+</a>
+<a href="mailto:YOUR_EMAIL_HERE">
+  <img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" />
+</a>
 
-## Run
+<br/>
+
+<img src="https://img.shields.io/badge/HopHacks-2026_Winner-7C3AED?style=for-the-badge" />
+<img src="https://img.shields.io/badge/SpaceXAI-Make_it_Legendary-0B3D91?style=for-the-badge" />
+<img src="https://img.shields.io/badge/OPEF-Environmental_Intelligence-198754?style=for-the-badge" />
+
+<br/><br/>
+
+<!-- Replace this with your real GIF / screenshot -->
+<img src="https://placehold.co/1100x620/0f172a/e2e8f0?text=Water+Flow+Demo" alt="Water Flow Demo" width="100%" />
+
+</div>
+
+---
+
+## Why it’s cool
+
+-  **Search anywhere on Earth**
+-  **Fly from space to ground**
+-  **Trace rivers, streams, and nearby flow paths**
+-  **Use real terrain + live satellite imagery**
+-  **Explore Marimo charts for rainfall, gauges, hydrology, and flood context**
+-  **Ask Grok questions about the selected site**
+-  **Generate case studies and downloadable reports**
+
+---
+
+## Quick stack
+
+<p>
+  <img height="34" src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/MapLibre-396CB2?style=for-the-badge&logo=maplibre&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/Marimo-FF6B6B?style=for-the-badge&logo=python&logoColor=white" />
+  <img height="34" src="https://img.shields.io/badge/Grok-xAI-111111?style=for-the-badge" />
+  <img height="34" src="https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white" />
+</p>
+
+---
+
+## How it works
+
+<details>
+<summary><strong> Main features</strong></summary>
+
+<br/>
+
+- **Ask Grok + research** for site interpretation and linked sources  
+- **Marimo charts tab** for rainfall, gauge flow, hydrology, soil, and flood context  
+- **Ground tab** for surface water inventory, USDA SSURGO soil / infiltration, and FEMA flood zones  
+- **Topo + flood layers** using USGS topographic basemap and FEMA NFHL polygons  
+- **City report** with Wikipedia/Wikidata + flood/soil/measurements  
+- **Print / PDF export** from the report tab  
+- **Hydrology cache** for faster revisits  
+- **Mobile bottom sheet UI** for quick access on smaller screens  
+
+</details>
+
+<br/>
+
+### App
 
 ```bash
 npm install
 npm run dev -- --hostname 127.0.0.1 --port 43173
 ```
 
-Open http://127.0.0.1:43173.
+Open:
 
-### Marimo charts (Python companion)
+```bash
+http://127.0.0.1:43173
+```
 
-The Analysis panel **Charts** tab embeds a live Marimo notebook (`marimo/site_charts.py`)
-via iframe. The notebook reads lat/lon from the URL and fetches `/api/site-snapshot`
-from the Next app (`WATERFLOW_ORIGIN`).
+### Marimo charts
 
 ```bash
 python3 -m pip install -r requirements-marimo.txt
 WATERFLOW_ORIGIN=http://127.0.0.1:43173 npm run marimo
 ```
 
-Or start both together:
+Or both together:
 
 ```bash
 npm run dev:all
 ```
 
-Waterflow stays on `43173`; Marimo on `2718`. If Charts shows “Marimo server is not
-running”, start the companion with the commands above (status is probed via
-`/api/marimo-status`).
-
-Optional Grok (Ask tab + richer reports):
+### Optional Grok support
 
 ```bash
 cp .env.example .env.local
 # set XAI_API_KEY
 ```
 
-## Push to GitHub (easy)
+</details>
 
-Repo: [mfelashry/waterflow](https://github.com/mfelashry/waterflow)
+<details>
+<summary><strong>🗂️ Data sources</strong></summary>
 
-### Cloud Agent → GitHub (one command)
+<br/>
 
-1. Cursor → this agent → **Forwarded Ports** → forward `43173`
-2. On your Mac Terminal:
+Water Flow combines public and external geospatial sources including:
 
-```bash
-curl -fsSL http://127.0.0.1:43173/push-to-github.sh | bash
-```
+- **USGS NHD / NWIS / EPQS**
+- **OpenStreetMap / Overpass**
+- **Open-Meteo Archive**
+- **USDA SSURGO**
+- **FEMA NFHL**
+- **Esri Imagery + Wayback**
+- **NASA GIBS**
+- **Wikipedia + Wikidata**
+- **xAI / Grok**
 
-That pulls the latest cloud build into `~/Documents/waterflow` and force-pushes `main` to GitHub.
+</details>
 
-### Edited on your Mac only
+---
 
-```bash
-cd ~/Documents/waterflow
-./scripts/push.sh "your message"
-```
+## Contributors
 
-## New APIs (beyond the original stack)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://devpost.com/mfelashryy">
+        <img src="https://d112y698adiu2z.cloudfront.net/photos/production/user_photos/005/367/150/datas/profile.jpeg" width="110" style="border-radius: 50%;" alt="Mohamed Elashry" />
+        <br />
+        <strong>Mohamed Elashry</strong>
+      </a>
+      <br />
+      <sub>Builder · Developer</sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://devpost.com/hfelashry1">
+        <img src="https://avatars.githubusercontent.com/u/322954558?height=180&v=4&width=180" width="110" style="border-radius: 50%;" alt="Hamza Elashry" />
+        <br />
+        <strong>Hamza Elashry</strong>
+      </a>
+      <br />
+      <sub>Builder · Developer</sub>
+    </td>
+  </tr>
+</table>
 
-| API | Role |
-| --- | --- |
-| Open-Meteo Archive | Annual rain → wettest / driest |
-| Wikipedia REST | City blurb for the report |
-| Wikidata SPARQL | Population / river facts |
-| USDA SSURGO (Soil Data Access) | Soil type, hydrologic group, infiltration |
-| FEMA NFHL | Flood hazard zones + site outlook |
-| USGS Topo basemap | Topographic map layer |
+---
 
-Already used: Nominatim, Photon, Overpass, USGS NHD/NWIS/EPQS, Esri imagery + Wayback, NASA GIBS, AWS terrain, xAI.
+## Links
+
+-  **Live Demo:** https://waterflow-teal.vercel.app/
+- **Devpost:** https://devpost.com/software/waterflow-41mrqd
+- **GitHub:** https://github.com/mfelashry/waterflow
+
+---
+
+<div align="center">
+
+Built for **HopHacks 2026**  
+Winner — **SpaceXAI: Make it Legendary**  
+Winner — **OPEF: Environmental Intelligence Challenge**
+
+</div>
