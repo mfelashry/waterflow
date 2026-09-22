@@ -140,46 +140,39 @@ Water Flow combines public and external geospatial sources including:
 
 ---
 
-## Contributors
+## 🔗 Contributors
 
 <table>
   <tr>
-    <td align="center" width="50%">
-      <a href="https://devpost.com/mfelashryy">
-        <img src="https://d112y698adiu2z.cloudfront.net/photos/production/user_photos/005/367/150/datas/profile.jpeg" width="110" style="border-radius: 50%;" alt="Mohamed Elashry" />
-        <br />
+    <td align="center" width="220">
+      <a href="https://linkedin.com/in/melashry">
+        <img src="https://d112y698adiu2z.cloudfront.net/photos/production/user_photos/005/367/150/datas/profile.jpeg" width="140" height="140" alt="Mohamed Elashry">
+        <br><br>
         <strong>Mohamed Elashry</strong>
       </a>
-      <br />
+      <br>
       <sub>Builder · Developer</sub>
+      <br><br>
+      <a href="https://linkedin.com/in/melashry">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
     </td>
-    <td align="center" width="50%">
-      <a href="https://devpost.com/hfelashry1">
-        <img src="https://avatars.githubusercontent.com/u/322954558?height=180&v=4&width=180" width="110" style="border-radius: 50%;" alt="Hamza Elashry" />
-        <br />
+
+    <td align="center" width="220">
+      <a href="https://www.linkedin.com/in/hamzaelashry/">
+        <img src="https://avatars.githubusercontent.com/u/322954558?v=4" width="140" height="140" alt="Hamza Elashry">
+        <br><br>
         <strong>Hamza Elashry</strong>
       </a>
-      <br />
+      <br>
       <sub>Builder · Developer</sub>
+      <br><br>
+      <a href="https://www.linkedin.com/in/hamzaelashry/">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
     </td>
   </tr>
 </table>
-
-```html
-<div align="center">
-
-<a href="https://linkedin.com/in/melashry">
-  <img height="40" src="https://img.shields.io/badge/Mohamed_Elashry-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="Mohamed Elashry LinkedIn">
-</a>
-
-<a href="https://www.linkedin.com/in/hamzaelashry/">
-  <img height="40" src="https://img.shields.io/badge/Hamza_Elashry-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="Hamza Elashry LinkedIn">
-</a>
-
-</div>
-```
-
-
 ---
 
 ## Links
