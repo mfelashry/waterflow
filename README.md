@@ -165,6 +165,21 @@ Water Flow combines public and external geospatial sources including:
   </tr>
 </table>
 
+```html
+<div align="center">
+
+<a href="https://linkedin.com/in/melashry">
+  <img height="40" src="https://img.shields.io/badge/Mohamed_Elashry-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="Mohamed Elashry LinkedIn">
+</a>
+
+<a href="https://www.linkedin.com/in/hamzaelashry/">
+  <img height="40" src="https://img.shields.io/badge/Hamza_Elashry-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="Hamza Elashry LinkedIn">
+</a>
+
+</div>
+```
+
+
 ---
 
 ## Links
