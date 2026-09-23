@@ -18,7 +18,7 @@ Search any place on Earth, fly down from orbit, and analyze water movement using
 <a href="https://devpost.com/software/waterflow-41mrqd">
   <img src="https://img.shields.io/badge/Devpost-Project-003E54?style=for-the-badge&logo=devpost&logoColor=white" />
 </a>
-<a href="mailto:YOUR_EMAIL_HERE">
+<a href="mailto:mfelashry@outlook.com">
   <img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" />
 </a>
 
@@ -30,7 +30,6 @@ Search any place on Earth, fly down from orbit, and analyze water movement using
 
 <br/><br/>
 
-<!-- Replace this with your real GIF / screenshot -->
 <img src="https://placehold.co/1100x620/0f172a/e2e8f0?text=Water+Flow+Demo" alt="Water Flow Demo" width="100%" />
 
 </div>
