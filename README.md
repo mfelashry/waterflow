@@ -30,8 +30,11 @@ Search any place on Earth, fly down from orbit, and analyze water movement using
 
 <br/><br/>
 
-<img src="https://www.youtube.com/watch?v=vpNviO1JtU4" alt="Water Flow Demo" width="100%" />
-
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=vpNviO1JtU4">
+    <img src="https://img.youtube.com/vi/vpNviO1JtU4/maxresdefault.jpg" alt="Water Flow Demo" width="600" />
+  </a>
+</p>
 </div>
 
 ---
